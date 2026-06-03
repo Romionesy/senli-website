@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>產品介紹 — SENLI 森璃</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100vh; background: #dbd7bc; }
+
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 44px;
+      background: rgba(245, 242, 228, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo { height: 44px; width: auto; }
+    .logo-name {
+      font-family: 'Castellar', 'Trajan Pro', 'Times New Roman', serif;
+      font-size: 19px; color: #837847; letter-spacing: 0.14em;
+      font-weight: normal; line-height: 1;
+    }
+    nav { display: flex; align-items: center; gap: 36px; }
+    nav a {
+      text-decoration: none; color: #837847;
+      font-size: 15px; font-weight: 300;
+      letter-spacing: 0.06em;
+      font-family: 'Source Han Serif VF', 'Source Han Serif TC', '思源宋體', serif;
+      position: relative; transition: opacity 0.35s ease;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: #837847;
+      transition: width 0.35s ease;
+    }
+    nav a:hover { opacity: 0.65; }
+    nav a:hover::after, nav a.active::after { width: 100%; }
+
+    main {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .placeholder {
+      text-align: center;
+      color: #a89b6e;
+      font-family: 'Source Han Serif VF', 'Source Han Serif TC', serif;
+      font-size: 13px; font-weight: 300;
+      letter-spacing: 0.3em;
+      opacity: 0.6;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-wrap">
+      <img class="logo" src="assets/logo.svg" alt="">
+      <span class="logo-name">SENLI</span>
+    </div>
+    <nav>
+      <a href="index.html">首頁</a>
+      <a href="survey.html">問卷調查</a>
+      <a href="interview.html">教授訪談</a>
+      <a href="product.html" class="active">產品介紹</a>
+      <a href="contact.html">聯絡我們</a>
+    </nav>
+  </header>
+  <main>
+    <div class="placeholder">內容建置中</div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SENLI 森璃</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+
+    /* ── Header ── */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 44px;
+      background: rgba(245, 242, 228, 0.38);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: background 0.5s ease, backdrop-filter 0.5s ease;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo { height: 44px; width: auto; }
+    .logo-name {
+      font-family: 'Castellar', 'Trajan Pro', 'Times New Roman', serif;
+      font-size: 19px; color: #837847; letter-spacing: 0.14em;
+      font-weight: normal; line-height: 1;
+    }
+    nav { display: flex; align-items: center; gap: 36px; }
+    nav a {
+      text-decoration: none; color: #837847;
+      font-size: 15px; font-weight: 300;
+      letter-spacing: 0.06em;
+      font-family: 'Source Han Serif VF', 'Source Han Serif TC', '思源宋體', serif;
+      position: relative; transition: opacity 0.35s ease;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: #837847;
+      transition: width 0.35s ease;
+    }
+    nav a:hover { opacity: 0.65; }
+    nav a:hover::after, nav a.active::after { width: 100%; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; width: 100vw; height: 100vh;
+      overflow: hidden; background: #dbd7bc;
+    }
+
+    /* layers共用 */
+    .layer {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; pointer-events: none;
+    }
+    .layer img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── 背景：略微放大以確保貼邊，hero overflow:hidden 裁掉超出部分 ── */
+    .layer-bg { z-index: 1; }
+    .layer-bg img {
+      position: absolute;
+      left: -14%; top: -14%;
+      width: 128%; height: 128%;
+      object-fit: fill;
+    }
+
+    /* ── 線條：與光暈同一 canvas(2206.96×1384.36)，object-fit:fill 確保座標對齊 ── */
+    .layer-lines {
+      z-index: 2;
+      animation: linesFlow 40s ease-in-out infinite;
+      will-change: transform;
+    }
+    .layer-lines img {
+      position: absolute;
+      left: -20%; top: -20%;
+      width: 140%; height: 140%;
+      object-fit: fill;
+    }
+    @keyframes linesFlow {
+      0%   { transform: translate(0%,   0%);   }
+      20%  { transform: translate(-1.8%, -0.6%); }
+      40%  { transform: translate(-3.2%, 0.4%); }
+      60%  { transform: translate(-2.5%, 1.0%); }
+      80%  { transform: translate(-1.0%, 0.2%); }
+      100% { transform: translate(0%,   0%);   }
+    }
+
+    /* ── 光暈個別互動 ── */
+    .layer-orbs { z-index: 3; pointer-events: none; }
+    .orb {
+      position: absolute;
+      pointer-events: all;
+      cursor: default;
+      will-change: transform, filter;
+      height: auto !important; /* 修正：覆蓋 .layer img 的 height:100% 避免變長方形 */
+    }
+    /* 平時浮動 */
+    @keyframes orbFloat {
+      0%   { transform: translateY(0px);   }
+      50%  { transform: translateY(-14px); }
+      100% { transform: translateY(0px);   }
+    }
+    /* hover：放大＋輕閃爍（不過曝） */
+    @keyframes orbFlicker {
+      0%   { transform: scale(1.14); filter: brightness(1.10) saturate(1.06); }
+      18%  { transform: scale(1.18); filter: brightness(1.20) saturate(1.10); }
+      35%  { transform: scale(1.13); filter: brightness(1.07) saturate(1.04); }
+      52%  { transform: scale(1.17); filter: brightness(1.18) saturate(1.09); }
+      70%  { transform: scale(1.12); filter: brightness(1.06) saturate(1.03); }
+      85%  { transform: scale(1.16); filter: brightness(1.16) saturate(1.07); }
+      100% { transform: scale(1.14); filter: brightness(1.10) saturate(1.06); }
+    }
+    .orb:hover {
+      animation: orbFlicker 1.6s ease-in-out infinite !important;
+    }
+
+    /* 各顆光暈位置：原始 canvas 值套用同一 -6%/112% 換算（新值 = 原值 × 1.12 − 6） */
+    #orb-1 { left: 30.53%; top: 46.14%; width: 27.41vw; animation: orbFloat 9s ease-in-out 0s   infinite; }
+    #orb-2 { left: 39.26%; top: 22.67%; width: 24.32vw; animation: orbFloat 9s ease-in-out 1.5s infinite; }
+    #orb-3 { left: 54.39%; top: 55.76%; width: 19.29vw; animation: orbFloat 9s ease-in-out 3s   infinite; }
+    #orb-4 { left:  4.35%; top: 38.93%; width: 13.25vw; animation: orbFloat 9s ease-in-out 4.5s infinite; }
+    #orb-5 { left: 17.65%; top: 11.34%; width: 15.94vw; animation: orbFloat 9s ease-in-out 6s   infinite; }
+    #orb-6 { left: 79.06%; top: 14.25%; width: 18.52vw; animation: orbFloat 9s ease-in-out 7.5s infinite; }
+    #orb-7 { left: 17.09%; top: 70.08%; width: 15.53vw; animation: orbFloat 9s ease-in-out 9s   infinite; }
+
+    /* ── 酒瓶：略微放大以確保左右貼邊 ── */
+    .layer-bottle { z-index: 4; }
+    .layer-bottle img {
+      position: absolute;
+      left: -6%; top: -6%;
+      width: 112%; height: 112%;
+      object-fit: fill;
+    }
+
+    /* ── 大標題 ── */
+    .layer-title {
+      z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .layer-title img {
+      width: auto; height: 65vh; max-width: 22vw;
+      object-fit: contain;
+      animation: titleFadeIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes titleFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header id="site-header">
+    <div class="logo-wrap">
+      <img class="logo" src="assets/logo.svg" alt="">
+      <span class="logo-name">SENLI</span>
+    </div>
+    <nav>
+      <a href="index.html"     class="nav-link active">首頁</a>
+      <a href="survey.html"    class="nav-link">問卷調查</a>
+      <a href="interview.html" class="nav-link">教授訪談</a>
+      <a href="product.html"   class="nav-link">產品介紹</a>
+      <a href="contact.html"   class="nav-link">聯絡我們</a>
+    </nav>
+  </header>
+
+  <!-- ── 首頁 Hero ── -->
+  <main>
+    <section class="hero">
+
+      <!-- 背景 -->
+      <div class="layer layer-bg">
+        <img src="assets/bg.svg" alt="">
+      </div>
+
+      <!-- 線條（緩慢流動，使用與光暈同一 canvas 的 svg檔/線條.svg） -->
+      <div class="layer layer-lines">
+        <img src="svg檔/線條.svg" alt="">
+      </div>
+
+      <!-- 光暈（7 顆，各自獨立互動，位置依參考檔精確定位） -->
+      <div class="layer layer-orbs">
+        <img id="orb-1" class="orb" src="svg檔/光暈1.svg" alt="">
+        <img id="orb-2" class="orb" src="svg檔/光暈2.svg" alt="">
+        <img id="orb-3" class="orb" src="svg檔/光暈3.svg" alt="">
+        <img id="orb-4" class="orb" src="svg檔/光暈4.svg" alt="">
+        <img id="orb-5" class="orb" src="svg檔/光暈5.svg" alt="">
+        <img id="orb-6" class="orb" src="svg檔/光暈6.svg" alt="">
+        <img id="orb-7" class="orb" src="svg檔/光暈7.svg" alt="">
+      </div>
+
+      <!-- 酒瓶 -->
+      <div class="layer layer-bottle">
+        <img src="assets/bottle.svg" alt="">
+      </div>
+
+      <!-- 大標題 森璃 -->
+      <div class="layer layer-title">
+        <img src="assets/title.svg" alt="SENLI 森璃">
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // 首頁導覽列維持 active
+    document.querySelectorAll('.nav-link').forEach(a => {
+      if (a.href === location.href) a.classList.add('active');
+    });
+  </script>
+</body>
+</html>
