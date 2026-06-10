@@ -103,34 +103,34 @@
        SVG: 795.58×171.84, master origin (855.28, 343.38)
        Cross-verified: 聯絡我們 in SVG at (259.89,61.18) → master (1115.17,404.56) ✓
        left=855.28/2395.22=35.71%, top=343.38/1260=27.25%, width=795.58/2395.22=33.21% */
-    .ctitle { z-index: 5; left: 35.71%; top: 27.25%; width: 33.21%; }
+    .ctitle { z-index: 5; left: 33.26%; top: 27.25%; width: 33.21%; }
 
     /* ─── 左側分區方框 ───
        SVG: 380.09×488.48, master origin (593.12, 551.67)
        left=593.12/2395.22=24.76%, top=551.67/1260=43.78%, width=380.09/2395.22=15.87% */
-    .info-bg { z-index: 6; left: 24.76%; top: 43.78%; width: 15.87%; }
+    .info-bg { z-index: 6; left: 22.31%; top: 43.78%; width: 15.87%; }
 
     /* ─── 左側內文 ───
        SVG: 253.99×366.48, master origin (646.68, 614.24)
        Cross-verified: first text in SVG at (0,16.27) → master (646.68,630.51) ✓
        left=646.68/2395.22=27.00%, top=614.24/1260=48.75%, width=253.99/2395.22=10.60% */
-    .info-text { z-index: 7; left: 27.00%; top: 48.75%; width: 10.60%; }
+    .info-text { z-index: 7; left: 24.55%; top: 48.75%; width: 10.60%; }
 
     /* ─── 對話框背景（視覺盒子） ───
        SVG: 417.1×488, master origin (1048.28, 552.62)
        left=43.77%, top=43.86%, width=17.41% */
-    .dialog-bg { z-index: 8; left: 43.77%; top: 43.86%; width: 17.41%; }
+    .dialog-bg { z-index: 8; left: 41.32%; top: 43.86%; width: 17.41%; }
 
     /* ─── 對話框的字（靜態文字層，完全來自原設計 SVG） ───
        SVG: 385.61×469.65, master origin (1066.41, 570.57)
        Cross-verified: 向SENLI in SVG at (0,16.27) → master (1066.41,586.84) ✓
        left=1066.41/2395.22=44.52%, top=570.57/1260=45.28%, width=385.61/2395.22=16.10% */
-    .dialog-text { z-index: 9; left: 44.52%; top: 45.28%; width: 16.10%; }
+    .dialog-text { z-index: 9; left: 42.07%; top: 45.28%; width: 16.10%; }
 
     /* ─── 回覆框背景（視覺盒子） ───
        SVG: 380.09×488.48, master origin (1540.44, 551.67)
        left=64.32%, top=43.78%, width=15.87% */
-    .reply-bg { z-index: 8; left: 64.32%; top: 43.78%; width: 15.87%; }
+    .reply-bg { z-index: 8; left: 61.87%; top: 43.78%; width: 15.87%; }
 
     /* ══════════════════════════════════════════════════
        光暈互動熱區（與 product 頁相同效果）
@@ -212,10 +212,12 @@
     .chat-input-only {
       position: absolute;
       z-index: 10;
-      left: 44.22%; top: 78.26%;
+      left: 41.77%; top: 78.26%;
       width: 16.51%; height: 4.21%;
-      display: flex; align-items: center;
-      padding: 0 4%; gap: 3%;
+      /* 註：left 已配合整體置中左移 2.45%（41.77 = 44.22 − 2.45） */
+      display: flex; align-items: center; justify-content: space-between;
+      /* 注意：% padding 會以 .page 寬度計算（非元素自身），故改用 vw 單位 */
+      padding: 0 0.7vw; gap: 0.5vw;
       /* 不透明背景：覆蓋 SVG 內建的「請輸入訊息......」與送出箭頭，避免重複 */
       background: #e9e4e8;
       pointer-events: all;
@@ -249,18 +251,20 @@
     .reply-overlay {
       position: absolute;
       z-index: 9;
-      left: 64.32%; top: 43.78%;
+      left: 61.87%; top: 43.78%;
       width: 15.87%; height: 38.78%;
       pointer-events: none;
       display: flex; flex-direction: column;
       overflow: hidden;
-      border-radius: 3.16%; /* matches SVG rx=12 at 380 width */
-      padding: 7% 8% 6%;
+      border-radius: 0.6vw;
+      /* % padding 會以 .page 寬度計算，故改用 vw 單位避免內容被壓成 0 寬 */
+      padding: 1.3vw 1.4vw 1.1vw;
     }
     .reply-messages {
       flex: 1;
+      width: 100%; min-width: 0;
       overflow-y: auto;
-      display: flex; flex-direction: column; gap: 6%;
+      display: flex; flex-direction: column; gap: 0.6vw;
       scrollbar-width: thin;
       scrollbar-color: rgba(131, 120, 71, 0.28) transparent;
       pointer-events: auto; /* 允許捲動與刪除操作 */
@@ -276,10 +280,11 @@
       position: relative;
       background: rgba(205, 186, 147, 0.50);
       border-radius: 14px 14px 14px 4px;
-      padding: 6% 8%;
+      padding: 0.55vw 0.75vw;
       font-family: 'Source Han Serif VF', '思源宋體', serif;
-      font-size: 0.65vw; color: #5a5030; line-height: 1.6;
-      align-self: flex-start; max-width: 86%;
+      font-size: 0.72vw; color: #5a5030; line-height: 1.6;
+      align-self: flex-start; width: fit-content; max-width: 100%;
+      word-break: break-word;
       animation: msgPop 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     /* 泡泡右下尾巴（對應你畫的對話框造型） */
@@ -321,7 +326,7 @@
     .owner-toggle {
       position: absolute;
       z-index: 11;
-      left: 78.2%; top: 44.6%;
+      left: 75.75%; top: 44.6%;
       width: 1.5vw; height: 1.5vw;
       border: none; border-radius: 50%;
       background: rgba(131, 120, 71, 0.16);
