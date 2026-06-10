@@ -174,9 +174,9 @@
       .layer-bottle {
         background-image: url("assets/bottle.svg"), url("assets/bottle.svg");
         background-repeat: no-repeat, no-repeat;
-        /* 往外擴：略為超出左右邊緣 */
-        background-position: -8% center, 108% center;
-        background-size: auto 68%, auto 68%;
+        /* 貼齊左右邊緣（left/right 讓 SVG 左右邊緣分別對齊畫面左右邊） */
+        background-position: left center, right center;
+        background-size: auto 58%, auto 58%;
       }
       /* 線條：用 contain 確保整段流動線條完整露在畫面中 */
       .layer-lines img {
