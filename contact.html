@@ -11,6 +11,13 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { width: 100%; overflow: hidden; background: #dbd7bc; }
+    /* 最底層固定全螢幕背景圖：填滿任何比例的螢幕（避免平板等高螢幕下方露出空白）*/
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: -1;
+      background: url("svg檔(聯絡我們)/背景.svg") center center / cover no-repeat;
+      pointer-events: none;
+    }
 
     /* ── Header ── */
     header {
