@@ -162,20 +162,21 @@
       nav { gap: 18px; }
       nav a { font-size: 13px; }
 
-      /* 背景：放大外擴並 cover，確保填滿畫面、不露出邊緣 */
+      /* 背景：錨定頂部並放大，讓底部破邊（破紙邊緣）移到畫面外 */
       .layer-bg img {
-        left: -25%; top: -25%; width: 150%; height: 150%;
-        object-fit: cover; object-position: center;
+        left: -20%; top: 0; width: 140%; height: 140%;
+        object-fit: cover; object-position: center top;
       }
-      /* 酒瓶：用 contain 完整顯示在畫面中（不裁切），置中略偏下 */
+      /* 酒瓶：兩瓶位於畫布左右邊緣(x=0 與 x=1262)，
+         用 fill 填滿全螢幕 → 兩瓶在左右邊緣形成全高的框 */
       .layer-bottle img {
         left: 0; top: 0; width: 100%; height: 100%;
-        object-fit: contain; object-position: center 58%;
+        object-fit: fill;
       }
-      /* 線條：用 contain 完整顯示在畫面中，保留流動氛圍 */
+      /* 線條：全版鋪滿(cover)，保留流動氛圍 */
       .layer-lines img {
-        left: 0; top: 0; width: 100%; height: 100%;
-        object-fit: contain; object-position: center;
+        left: -10%; top: 0; width: 120%; height: 100%;
+        object-fit: cover;
       }
 
       /* 大標題：手機上放大、置中（橫向 22vw 太細，改用較大尺寸） */
