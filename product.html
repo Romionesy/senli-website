@@ -321,30 +321,27 @@
     }
     .card-modal-close:hover { background: rgba(131, 120, 71, 0.14); }
 
-    /* 可捲動視口 */
+    /* 視口：裁切顯示，用 transform 而非捲動定位 */
     .card-modal-viewport {
       flex: 1;
-      overflow: auto;
+      overflow: hidden;
       background: #e8e4ce;
-      padding: 16px;
+      position: relative;
     }
 
-    /* 畫布：兩個 SVG 疊合
-       分區的方框 aspect = 2021.41/1541.2 = 131.15% */
+    /* 畫布：絕對定位，用 JS transform 移到目標卡片 */
     .card-modal-canvas {
-      position: relative;
-      margin: auto;
-      padding-bottom: 131.15%;
-      height: 0;
-      transition: width 0.30s ease;
+      position: absolute;
+      top: 0; left: 0;
+      will-change: transform, width;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                  width    0.42s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .card-modal-frame-bg {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: fill;
       display: block;
+      width: 100%; height: auto;
     }
-    /* 內文.svg 相對於分區方框.svg 的偏移（由 master canvas 座標推算）：
+    /* 內文.svg 相對於分區方框.svg 的偏移：
        left = 55.29/1541.2 = 3.59%
        top  = 45.84/2021.41 = 2.27%（% of canvas height）
        width= 1435.13/1541.2 = 93.12% */
@@ -465,7 +462,7 @@
     </div>
   </div>
 
-  <!-- 卡片放大邏輯 -->
+  <!-- 卡片放大邏輯（transform 定位，不捲動） -->
   <script>
   (function () {
     /* 六張卡片（分區的方框.svg 1541.2×2021.41 中的正規化座標） */
@@ -500,50 +497,63 @@
     function openCard(idx) {
       var card = CARDS[idx];
       titleEl.textContent = card.title;
+
+      /* 先把 canvas 移到畫面外，避免閃爍 */
+      canvas.style.transition = 'none';
+      canvas.style.transform  = 'translate(-9999px, -9999px)';
+      canvas.style.width      = '';
+
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
 
-      canvas.style.width = '';
-      viewport.scrollLeft = 0;
-      viewport.scrollTop  = 0;
-
+      /* 等兩幀確保 modal 已渲染，再計算並套用位置 */
       requestAnimationFrame(function () {
-        requestAnimationFrame(function () { zoomToCard(card); });
+        requestAnimationFrame(function () {
+          canvas.style.transition = ''; /* 恢復 CSS transition */
+          zoomToCard(card);
+        });
       });
     }
 
     function zoomToCard(card) {
-      var vpW = viewport.clientWidth  - 32;
-      var vpH = viewport.clientHeight - 32;
+      var vpW = viewport.clientWidth;
+      var vpH = viewport.clientHeight;
 
+      /* 卡片在 SVG 座標系的尺寸 */
       var cardW_svg = (card.nx2 - card.nx1) * 1541.2;
       var cardH_svg = (card.ny2 - card.ny1) * 2021.41;
 
+      /* 讓卡片填滿視口的 88%，最大 4× */
       var scale = Math.min(
-        (vpW * 0.82) / cardW_svg,
-        (vpH * 0.82) / cardH_svg,
-        3.2
+        (vpW * 0.88) / cardW_svg,
+        (vpH * 0.88) / cardH_svg,
+        4.0
       );
-      scale = Math.max(scale, 0.9);
+      scale = Math.max(scale, 0.4);
 
       var canvasW = Math.round(1541.2 * scale);
-      canvas.style.width = canvasW + 'px';
+      var canvasH = canvasW * (2021.41 / 1541.2); /* 維持長寬比 */
 
-      requestAnimationFrame(function () {
-        var cH = canvas.offsetHeight;
-        var scrollLeft = card.nx1 * canvasW - (vpW - cardW_svg * scale) / 2;
-        var scrollTop  = card.ny1 * cH      - (vpH - cardH_svg * scale) / 2;
-        viewport.scrollTo({
-          left: Math.max(0, scrollLeft),
-          top:  Math.max(0, scrollTop),
-          behavior: 'smooth'
-        });
-      });
+      /* 目標卡片中心點（canvas 像素） */
+      var cardCx = (card.nx1 + card.nx2) / 2 * canvasW;
+      var cardCy = (card.ny1 + card.ny2) / 2 * canvasH;
+
+      /* 平移 canvas，讓卡片中心對齊視口中心 */
+      var tx = Math.round(vpW / 2 - cardCx);
+      var ty = Math.round(vpH / 2 - cardCy);
+
+      canvas.style.width     = canvasW + 'px';
+      canvas.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
     }
 
     function closeModal() {
       modal.classList.remove('open');
       document.body.style.overflow = '';
+      /* 關閉後重設，避免下次開啟時有殘留 */
+      setTimeout(function () {
+        canvas.style.transform = '';
+        canvas.style.width     = '';
+      }, 400);
     }
 
     document.querySelectorAll('.card-hot').forEach(function (el) {
