@@ -174,13 +174,13 @@
       .layer-bottle {
         background-image: url("assets/bottle.svg"), url("assets/bottle.svg");
         background-repeat: no-repeat, no-repeat;
-        /* 往外擴：左右各超出邊緣 40px */
-        background-position: left -40px center, right -40px center;
+        /* 往外擴：左右各超出邊緣 55px */
+        background-position: left -55px center, right -55px center;
         background-size: auto 50%, auto 50%;
       }
-      /* 線條：用 contain 確保整段流動線條完整露在畫面中 */
+      /* 線條：用 contain 並放大，讓流動線條更明顯 */
       .layer-lines img {
-        left: -35%; top: 0; width: 170%; height: 100%;
+        left: -70%; top: 0; width: 240%; height: 100%;
         object-fit: contain; object-position: center;
       }
 
