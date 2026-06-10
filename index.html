@@ -178,9 +178,11 @@
         background-position: left -20px center, right -20px center;
         background-size: auto 50%, auto 50%;
       }
-      /* 線條：用 fill 收窄往內、再往上下拉長 */
+      /* 線條：旋轉 90°，讓橫向長線條轉成直向，沿手機長邊由上往下延伸 */
       .layer-lines img {
-        left: -10%; top: -120%; width: 120%; height: 340%;
+        left: 50%; top: 50%;
+        width: 150vh; height: 90vw;
+        transform: translate(-50%, -50%) rotate(90deg);
         object-fit: fill;
       }
 
