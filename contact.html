@@ -279,11 +279,11 @@
     .msg-reply {
       position: relative;
       background: rgba(205, 186, 147, 0.50);
-      border-radius: 14px 14px 14px 4px;
+      border-radius: 14px 14px 4px 14px;
       padding: 0.55vw 0.75vw;
       font-family: 'Source Han Serif VF', '思源宋體', serif;
       font-size: 0.72vw; color: #5a5030; line-height: 1.6;
-      align-self: flex-start; width: fit-content; max-width: 100%;
+      align-self: flex-end; width: fit-content; max-width: 100%;
       word-break: break-word;
       animation: msgPop 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
@@ -291,9 +291,9 @@
     .msg-reply::after {
       content: '';
       position: absolute;
-      right: 14%; bottom: -7px;
+      left: 14%; bottom: -7px;
       width: 0; height: 0;
-      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
       border-top: 9px solid rgba(205, 186, 147, 0.50);
     }
 
@@ -326,7 +326,7 @@
     .owner-toggle {
       position: absolute;
       z-index: 11;
-      left: 75.75%; top: 44.6%;
+      left: 62.7%; top: 44.7%;
       width: 1.5vw; height: 1.5vw;
       border: none; border-radius: 50%;
       background: rgba(131, 120, 71, 0.16);
