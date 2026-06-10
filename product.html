@@ -333,9 +333,10 @@
     .card-modal-canvas {
       position: absolute;
       top: 0; left: 0;
-      will-change: transform, width;
-      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-                  width    0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, width, clip-path;
+      transition: transform  0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                  width      0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                  clip-path  0.42s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .card-modal-frame-bg {
       display: block;
@@ -502,6 +503,7 @@
       canvas.style.transition = 'none';
       canvas.style.transform  = 'translate(-9999px, -9999px)';
       canvas.style.width      = '';
+      canvas.style.clipPath   = '';
 
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -544,6 +546,17 @@
 
       canvas.style.width     = canvasW + 'px';
       canvas.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
+
+      /* clip-path：精確裁切到目標卡片邊界，完全遮住相鄰方框
+         inset(top right bottom left round radius)
+         各值為相對於 canvas 自身寬/高的百分比 */
+      var r = Math.round(12 * scale); /* 對應 SVG rx/ry="12" 的圓角 */
+      canvas.style.clipPath = 'inset('
+        + (card.ny1 * 100).toFixed(2) + '% '
+        + ((1 - card.nx2) * 100).toFixed(2) + '% '
+        + ((1 - card.ny2) * 100).toFixed(2) + '% '
+        + (card.nx1 * 100).toFixed(2) + '% '
+        + 'round ' + r + 'px)';
     }
 
     function closeModal() {
@@ -553,6 +566,7 @@
       setTimeout(function () {
         canvas.style.transform = '';
         canvas.style.width     = '';
+        canvas.style.clipPath  = '';
       }, 400);
     }
 
