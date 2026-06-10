@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_2" data-name="圖層 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 795.58 171.84">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 28.41px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #837847;
+        font-family: SourceHanSerifVF-Light-90ms-RKSJ-H, 'Source Han Serif VF';
+        font-variation-settings: 'wght' 300;
+        font-weight: 300;
+      }
+
+      .cls-3 {
+        letter-spacing: -.48em;
+      }
+
+      .cls-2 {
+        font-size: 68.95px;
+        stroke: #847947;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-6 {
+        letter-spacing: -.49em;
+      }
+    </style>
+  </defs>
+  <g id="_聯絡我們" data-name="聯絡我們">
+    <g id="_標題" data-name="標題">
+      <text class="cls-2" transform="translate(259.89 61.18)"><tspan x="0" y="0">聯絡我們</tspan></text>
+      <text class="cls-1" transform="translate(0 142.01)"><tspan x="0" y="0">對本專題有任何問題或合作想</tspan><tspan class="cls-5" x="369.38" y="0">法</tspan><tspan class="cls-3" x="397.22" y="0">，</tspan><tspan x="412" y="0">歡迎透過以下方式與我們聯</tspan><tspan class="cls-4" x="752.96" y="0">繫</tspan><tspan class="cls-6" x="781.09" y="0">。</tspan></text>
+    </g>
+  </g>
+</svg>

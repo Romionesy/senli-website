@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_2" data-name="圖層 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380.09 488.48">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #cdba93;
+      }
+
+      .cls-1, .cls-2 {
+        opacity: .5;
+      }
+
+      .cls-2 {
+        fill: #f3eff6;
+        stroke: #837847;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="_聯絡我們" data-name="聯絡我們">
+    <g id="_回覆框" data-name="回覆框">
+      <rect class="cls-2" x="1" y="1" width="378.09" height="486.48" rx="12" ry="12"/>
+      <path class="cls-1" d="M37.57,28.3h297.52c6.85,0,12.46,4.4,12.46,9.79v87.53l7.42,38.1-50.55-28.32H37.57c-6.85,0-12.46-4.4-12.46-9.79V38.09c0-5.38,5.61-9.79,12.46-9.79Z"/>
+      <path class="cls-1" d="M102.65,194.88h236.52c5.45,0,9.91,3.24,9.91,7.2v64.44s5.9,28.05,5.9,28.05l-40.19-20.85H102.65c-5.45,0-9.91-3.24-9.91-7.2v-64.44c0-3.96,4.46-7.2,9.91-7.2Z"/>
+    </g>
+  </g>
+</svg>
