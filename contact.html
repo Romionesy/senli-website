@@ -10,7 +10,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { width: 100%; overflow: hidden; background: #dbd7bc; }
+    body { width: 100%; min-height: 100vh; overflow: hidden; background: #dbd7bc; }
 
     /* ── Header ── */
     header {
@@ -54,7 +54,7 @@
       width: 100%;
       padding-bottom: 52.60%;
       height: 0;
-      overflow: hidden;
+      overflow: visible; /* 不裁切，讓下移後的酒瓶等內容完整顯示 */
     }
 
     /* 內容平移容器：背景以外的元素整組往下移（背景 .bg 為 fixed 不受影響） */
