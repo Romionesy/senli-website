@@ -222,6 +222,139 @@
     .cards-text { z-index: 8; left: 29.68%; top: 34.45%; width: 56.39%; }
 
     /* 照片已嵌入 內文.svg 內部，不需要獨立圖層 */
+
+    /* ══════════════════════════════════════════
+       卡片點擊放大功能
+    ══════════════════════════════════════════ */
+
+    /* 頁面上的透明可點擊熱區 */
+    .card-hot {
+      position: absolute;
+      border-radius: 12px;
+      cursor: zoom-in;
+      border: 2px solid transparent;
+      background: transparent;
+      transition: border-color 0.25s ease, background 0.25s ease;
+      z-index: 9;
+      pointer-events: all;
+    }
+    .card-hot:hover {
+      border-color: rgba(131, 120, 71, 0.38);
+      background: rgba(245, 240, 215, 0.12);
+    }
+    .card-hot::after {
+      content: '點擊放大';
+      position: absolute;
+      bottom: 7px; right: 11px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba(131, 120, 71, 0.80);
+      background: rgba(245, 242, 228, 0.88);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(131, 120, 71, 0.22);
+      font-family: 'Source Han Serif VF', '思源宋體', serif;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .card-hot:hover::after { opacity: 1; }
+
+    /* Modal 外層覆蓋 */
+    .card-modal {
+      position: fixed; inset: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0;
+      transition: opacity 0.32s ease, visibility 0.32s ease;
+    }
+    .card-modal.open { visibility: visible; opacity: 1; }
+
+    /* 背景模糊遮罩 */
+    .card-modal-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(38, 34, 20, 0.58);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+
+    /* 視窗本體 */
+    .card-modal-box {
+      position: relative; z-index: 1;
+      width: min(90vw, 1080px);
+      height: min(88vh, 860px);
+      background: #f5f2e4;
+      border-radius: 18px;
+      box-shadow: 0 28px 90px rgba(0,0,0,0.40);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .card-modal.open .card-modal-box {
+      animation: modalSlideIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes modalSlideIn {
+      from { transform: scale(0.86) translateY(24px); opacity: 0; }
+      to   { transform: scale(1)    translateY(0);    opacity: 1; }
+    }
+
+    /* 標題列 */
+    .card-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 15px 20px 13px;
+      border-bottom: 1px solid rgba(131, 120, 71, 0.18);
+      flex-shrink: 0;
+      background: rgba(245, 242, 228, 0.96);
+    }
+    .card-modal-title {
+      font-family: 'Source Han Serif VF', 'Source Han Serif TC', '思源宋體', serif;
+      font-size: 16px; color: #5a5030;
+      letter-spacing: 0.10em; font-weight: normal;
+    }
+    .card-modal-close {
+      width: 32px; height: 32px;
+      border: none; background: none; cursor: pointer;
+      color: #837847; font-size: 18px; line-height: 1;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s ease; flex-shrink: 0;
+    }
+    .card-modal-close:hover { background: rgba(131, 120, 71, 0.14); }
+
+    /* 可捲動視口 */
+    .card-modal-viewport {
+      flex: 1;
+      overflow: auto;
+      background: #e8e4ce;
+      padding: 16px;
+    }
+
+    /* 畫布：兩個 SVG 疊合
+       分區的方框 aspect = 2021.41/1541.2 = 131.15% */
+    .card-modal-canvas {
+      position: relative;
+      margin: auto;
+      padding-bottom: 131.15%;
+      height: 0;
+      transition: width 0.30s ease;
+    }
+    .card-modal-frame-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: fill;
+      display: block;
+    }
+    /* 內文.svg 相對於分區方框.svg 的偏移（由 master canvas 座標推算）：
+       left = 55.29/1541.2 = 3.59%
+       top  = 45.84/2021.41 = 2.27%（% of canvas height）
+       width= 1435.13/1541.2 = 93.12% */
+    .card-modal-frame-text {
+      position: absolute;
+      left: 3.59%; top: 2.27%;
+      width: 93.12%; height: auto;
+      display: block;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -293,8 +426,139 @@
 
       <!-- 照片已嵌入 內文.svg 內，不需額外圖層 -->
 
+      <!-- ── 卡片點擊熱區（透明可點擊覆蓋在各方框上）──
+           位置計算：cards-bg left=27.51%,top=33.20%,width=60.54%
+           各 card 的 left/top/width/height 均為 master canvas 換算後的頁面百分比 -->
+      <div class="card-hot" data-card="0"
+           style="left:27.65%;top:33.23%;width:36.55%;height:7.30%"></div>
+      <div class="card-hot" data-card="1"
+           style="left:27.67%;top:42.09%;width:36.55%;height:13.90%"></div>
+      <div class="card-hot" data-card="2"
+           style="left:66.69%;top:48.67%;width:21.34%;height:7.35%"></div>
+      <div class="card-hot" data-card="3"
+           style="left:27.67%;top:57.57%;width:36.55%;height:12.85%"></div>
+      <div class="card-hot" data-card="4"
+           style="left:66.76%;top:57.57%;width:21.20%;height:12.88%"></div>
+      <div class="card-hot" data-card="5"
+           style="left:27.55%;top:72.01%;width:60.44%;height:16.10%"></div>
+
     </div>
   </main>
+
+  <!-- ── 卡片放大視窗（Modal）── -->
+  <div id="card-modal" class="card-modal">
+    <div class="card-modal-backdrop" id="card-modal-backdrop"></div>
+    <div class="card-modal-box">
+      <div class="card-modal-header">
+        <span class="card-modal-title" id="card-modal-title">—</span>
+        <button class="card-modal-close" id="card-modal-close"
+                aria-label="關閉視窗">✕</button>
+      </div>
+      <div class="card-modal-viewport" id="card-modal-viewport">
+        <div class="card-modal-canvas" id="card-modal-canvas">
+          <img class="card-modal-frame-bg"
+               src="svg檔(產品介紹)/分區的方框.svg?v=2" alt="">
+          <img class="card-modal-frame-text"
+               src="svg檔(產品介紹)/內文.svg?v=2" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 卡片放大邏輯 -->
+  <script>
+  (function () {
+    /* 六張卡片（分區的方框.svg 1541.2×2021.41 中的正規化座標） */
+    var CARDS = [
+      { title: '—01　設計主題與動機',
+        nx1:   3.48/1541.2, ny1:    1/2021.41,
+        nx2: 933.84/1541.2, ny2: 269.62/2021.41 },
+      { title: '—02　市場與使用者研究',
+        nx1:   4.15/1541.2, ny1:  327.43/2021.41,
+        nx2: 934.51/1541.2, ny2:  839.10/2021.41 },
+      { title: '—03　設計機會與方向',
+        nx1:  996.99/1541.2, ny1:  569.29/2021.41,
+        nx2: 1540.19/1541.2, ny2:  839.62/2021.41 },
+      { title: '—04　概念發想過程',
+        nx1:   4.15/1541.2, ny1:  896.92/2021.41,
+        nx2: 934.51/1541.2, ny2: 1369.97/2021.41 },
+      { title: '—05　設計提案與特色',
+        nx1:  998.58/1541.2, ny1:  896.92/2021.41,
+        nx2: 1538.24/1541.2, ny2: 1370.88/2021.41 },
+      { title: '—06　完整設計呈現',
+        nx1:    1/1541.2,    ny1: 1428.18/2021.41,
+        nx2: 1538.89/1541.2, ny2: 2020.41/2021.41 },
+    ];
+
+    var modal    = document.getElementById('card-modal');
+    var backdrop = document.getElementById('card-modal-backdrop');
+    var titleEl  = document.getElementById('card-modal-title');
+    var closeBtn = document.getElementById('card-modal-close');
+    var viewport = document.getElementById('card-modal-viewport');
+    var canvas   = document.getElementById('card-modal-canvas');
+
+    function openCard(idx) {
+      var card = CARDS[idx];
+      titleEl.textContent = card.title;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      canvas.style.width = '';
+      viewport.scrollLeft = 0;
+      viewport.scrollTop  = 0;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { zoomToCard(card); });
+      });
+    }
+
+    function zoomToCard(card) {
+      var vpW = viewport.clientWidth  - 32;
+      var vpH = viewport.clientHeight - 32;
+
+      var cardW_svg = (card.nx2 - card.nx1) * 1541.2;
+      var cardH_svg = (card.ny2 - card.ny1) * 2021.41;
+
+      var scale = Math.min(
+        (vpW * 0.82) / cardW_svg,
+        (vpH * 0.82) / cardH_svg,
+        3.2
+      );
+      scale = Math.max(scale, 0.9);
+
+      var canvasW = Math.round(1541.2 * scale);
+      canvas.style.width = canvasW + 'px';
+
+      requestAnimationFrame(function () {
+        var cH = canvas.offsetHeight;
+        var scrollLeft = card.nx1 * canvasW - (vpW - cardW_svg * scale) / 2;
+        var scrollTop  = card.ny1 * cH      - (vpH - cardH_svg * scale) / 2;
+        viewport.scrollTo({
+          left: Math.max(0, scrollLeft),
+          top:  Math.max(0, scrollTop),
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.card-hot').forEach(function (el) {
+      el.addEventListener('click', function () {
+        openCard(parseInt(el.dataset.card, 10));
+      });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
+  </script>
 
 </body>
 </html>
