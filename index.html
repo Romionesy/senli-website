@@ -174,13 +174,13 @@
       .layer-bottle {
         background-image: url("assets/bottle.svg"), url("assets/bottle.svg");
         background-repeat: no-repeat, no-repeat;
-        /* 往內移：左右各從邊緣內縮 12px */
-        background-position: left 12px center, right 12px center;
+        /* 往外擴一點點：左右各超出邊緣 4px */
+        background-position: left -4px center, right -4px center;
         background-size: auto 50%, auto 50%;
       }
-      /* 線條：用 fill 拉長並收窄往內 */
+      /* 線條：用 fill 再收窄往內、再往上下拉長 */
       .layer-lines img {
-        left: -25%; top: -35%; width: 150%; height: 170%;
+        left: -10%; top: -55%; width: 120%; height: 210%;
         object-fit: fill;
       }
 
