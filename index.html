@@ -178,13 +178,8 @@
         background-position: left -20px center, right -20px center;
         background-size: auto 50%, auto 50%;
       }
-      /* 線條：旋轉 90°，讓橫向長線條轉成直向，沿手機長邊由上往下延伸 */
-      .layer-lines img {
-        left: 50%; top: 50%;
-        width: 150vh; height: 90vw;
-        transform: translate(-50%, -50%) rotate(90deg);
-        object-fit: fill;
-      }
+      /* 線條：手機版隱藏（橫向線條在直向螢幕效果不佳） */
+      .layer-lines { display: none; }
 
       /* 大標題：手機上放大、置中（橫向 22vw 太細，改用較大尺寸） */
       .layer-title img {
