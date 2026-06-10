@@ -167,15 +167,19 @@
         left: -20%; top: 0; width: 140%; height: 140%;
         object-fit: cover; object-position: center top;
       }
-      /* 酒瓶：兩瓶位於畫布左右邊緣(x=0 與 x=1262)，
-         用 fill 填滿全螢幕 → 兩瓶在左右邊緣形成全高的框 */
-      .layer-bottle img {
-        left: 0; top: 0; width: 100%; height: 100%;
-        object-fit: fill;
+      /* 酒瓶：兩瓶位於畫布左右邊緣，單張圖無法同時讓兩瓶又大又貼邊，
+         故改用同一張圖當「兩個背景」分別錨定左右邊緣、依高度等比例放大，
+         保持正常比例、變大且貼齊邊緣 */
+      .layer-bottle img { display: none; }
+      .layer-bottle {
+        background-image: url("assets/bottle.svg"), url("assets/bottle.svg");
+        background-repeat: no-repeat, no-repeat;
+        background-position: left center, right center;
+        background-size: auto 88%, auto 88%;
       }
-      /* 線條：全版鋪滿(cover)，保留流動氛圍 */
+      /* 線條：放大讓更多流動線條露出 */
       .layer-lines img {
-        left: -10%; top: 0; width: 120%; height: 100%;
+        left: -30%; top: -8%; width: 165%; height: 118%;
         object-fit: cover;
       }
 
