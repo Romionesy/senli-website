@@ -96,8 +96,8 @@
       100% { transform: translateY(0px);  }
     }
 
-    /* ─── 酒瓶 ─── 外擴（左瓶 x=0、右瓶右緣=2002=SVG寬，往左右各溢出 6%） */
-    .bottles { z-index: 4; left: -6%; top: 10%; width: 112%; }
+    /* ─── 酒瓶 ─── 往回移，左右各溢出約 2% */
+    .bottles { z-index: 4; left: -2%; top: 10%; width: 104%; }
 
     /* ─── 標題（頁面大標 + 副標） ───
        SVG: 795.58×171.84, master origin (855.28, 343.38)
@@ -204,17 +204,22 @@
          top  = 43.86% + (433.41/488) × 38.73% = 43.86% + 34.41% = 78.27% of page height
          height = (53.11/488) × 38.73%            = 4.22%  of page height
     ══════════════════════════════════════════════════ */
+    /* 精確對齊對話框輸入列：
+       對話框 SVG 高 = 17.41%×(488/417.1)/52.60% = 38.73% 頁高
+       輸入列 y=433.41/488 → top = 43.86% + 0.8881×38.73% = 78.26%
+       輸入列高 = (53.11/488)×38.73% = 4.21%
+       為對齊外框圓角，左右各內縮 0.45% */
     .chat-input-only {
       position: absolute;
       z-index: 10;
-      left: 43.77%; top: 77.6%;
-      width: 17.41%; height: 5.6%;
+      left: 44.22%; top: 78.26%;
+      width: 16.51%; height: 4.21%;
       display: flex; align-items: center;
-      padding: 0 5%; gap: 3%;
+      padding: 0 4%; gap: 3%;
       /* 不透明背景：覆蓋 SVG 內建的「請輸入訊息......」與送出箭頭，避免重複 */
       background: #e9e4e8;
       pointer-events: all;
-      border-radius: 0 0 2.88% 2.88%;
+      border-radius: 0 0 0.5vw 0.5vw;
     }
     #chat-input {
       flex: 1;
@@ -250,7 +255,7 @@
       display: flex; flex-direction: column;
       overflow: hidden;
       border-radius: 3.16%; /* matches SVG rx=12 at 380 width */
-      padding: 4% 5%;
+      padding: 7% 8% 6%;
     }
     .reply-messages {
       flex: 1;
@@ -266,17 +271,25 @@
       background: rgba(131, 120, 71, 0.28); border-radius: 2px;
     }
 
-    /* 回覆框裡累積的訊息 */
+    /* 回覆框裡的訊息：樣式比照你畫的泡泡（#cdba93 @0.5、圓角、右下小尾巴） */
     .msg-reply {
       position: relative;
-      background: rgba(245, 242, 220, 0.88);
-      border: 1px solid rgba(131, 120, 71, 0.20);
-      border-radius: 2% 6% 6% 2%;
-      padding: 5% 8%;
+      background: rgba(205, 186, 147, 0.50);
+      border-radius: 14px 14px 14px 4px;
+      padding: 6% 8%;
       font-family: 'Source Han Serif VF', '思源宋體', serif;
-      font-size: 0.65vw; color: #5a5030; line-height: 1.65;
-      align-self: flex-start; max-width: 92%;
+      font-size: 0.65vw; color: #5a5030; line-height: 1.6;
+      align-self: flex-start; max-width: 86%;
       animation: msgPop 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    /* 泡泡右下尾巴（對應你畫的對話框造型） */
+    .msg-reply::after {
+      content: '';
+      position: absolute;
+      right: 14%; bottom: -7px;
+      width: 0; height: 0;
+      border-left: 7px solid transparent;
+      border-top: 9px solid rgba(205, 186, 147, 0.50);
     }
 
     @keyframes msgPop {
@@ -392,9 +405,9 @@
         <button id="chat-send" title="送出">&#9654;</button>
       </div>
 
-      <!-- 回覆框背景 SVG -->
+      <!-- 回覆框背景 SVG（只留外框，泡泡由動態訊息呈現） -->
       <div class="lyr reply-bg">
-        <img src="svg檔(聯絡我們)/回覆框.svg" alt="">
+        <img src="svg檔(聯絡我們)/回覆框_外框.svg" alt="">
       </div>
 
       <!-- 回覆框累積顯示 Overlay -->
