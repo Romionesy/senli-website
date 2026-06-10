@@ -15,7 +15,8 @@
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: -1;
-      background: url("svg檔(聯絡我們)/背景.svg") center center / cover no-repeat;
+      /* 放大並錨定頂部，讓圖片下緣（破邊）推到畫面外，底部不留空白 */
+      background: url("svg檔(聯絡我們)/背景.svg") center top / auto 145% no-repeat;
       pointer-events: none;
     }
 
