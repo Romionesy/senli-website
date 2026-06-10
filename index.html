@@ -174,13 +174,14 @@
       .layer-bottle {
         background-image: url("assets/bottle.svg"), url("assets/bottle.svg");
         background-repeat: no-repeat, no-repeat;
-        background-position: left center, right center;
-        background-size: auto 88%, auto 88%;
+        /* 往外擴：略為超出左右邊緣 */
+        background-position: -8% center, 108% center;
+        background-size: auto 68%, auto 68%;
       }
-      /* 線條：放大讓更多流動線條露出 */
+      /* 線條：用 contain 確保整段流動線條完整露在畫面中 */
       .layer-lines img {
-        left: -30%; top: -8%; width: 165%; height: 118%;
-        object-fit: cover;
+        left: -35%; top: 0; width: 170%; height: 100%;
+        object-fit: contain; object-position: center;
       }
 
       /* 大標題：手機上放大、置中（橫向 22vw 太細，改用較大尺寸） */
