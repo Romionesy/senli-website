@@ -64,17 +64,13 @@
     }
     .lyr img { display: block; width: 100%; height: auto; }
 
-    /* ─── 背景 ───
-       SVG: 2134×1260 at master origin (204.71, 0)
-       Expanded to fill: left=0, width=100% */
-    .bg { z-index: 1; left: 0; top: 0; width: 100%; }
+    /* ─── 背景 ─── 外擴 */
+    .bg { z-index: 1; left: -4%; top: -3%; width: 108%; }
 
-    /* ─── 線條 ───
-       SVG: 2395.22×1002.17 (same width as master)
-       Animation: slow ambient flow */
+    /* ─── 線條 ─── 外擴 */
     .lines {
       z-index: 2;
-      left: -6%; top: 5%; width: 112%;
+      left: -12%; top: 0%; width: 124%;
       animation: linesFlow 50s ease-in-out infinite;
       will-change: transform;
     }
@@ -87,13 +83,10 @@
       100% { transform: translate(0%,    0%);    }
     }
 
-    /* ─── 光暈 ───
-       SVG: 1805×998, master origin (267.71, 169)
-       left=267.71/2395.22=11.18%, top=169/1260=13.41%, width=1805/2395.22=75.36%
-       外擴 ~10% for fuller coverage */
+    /* ─── 光暈 ─── 外擴 */
     .orb {
       z-index: 3;
-      left: 7%; top: 10%; width: 84%;
+      left: 2%; top: 6%; width: 96%;
       animation: orbFloat 10s ease-in-out infinite;
       will-change: transform;
     }
@@ -103,10 +96,8 @@
       100% { transform: translateY(0px);  }
     }
 
-    /* ─── 酒瓶 ───
-       SVG: 2002×959, master origin (255.71, 199)
-       left=255.71/2395.22=10.68%, top=199/1260=15.79%, width=2002/2395.22=83.58% */
-    .bottles { z-index: 4; left: 10.68%; top: 15.79%; width: 83.58%; }
+    /* ─── 酒瓶 ─── 外擴 */
+    .bottles { z-index: 4; left: 3%; top: 10%; width: 94%; }
 
     /* ─── 標題（頁面大標 + 副標） ───
        SVG: 795.58×171.84, master origin (855.28, 343.38)
@@ -129,6 +120,12 @@
        SVG: 417.1×488, master origin (1048.28, 552.62)
        left=43.77%, top=43.86%, width=17.41% */
     .dialog-bg { z-index: 8; left: 43.77%; top: 43.86%; width: 17.41%; }
+
+    /* ─── 對話框的字（靜態文字層，完全來自原設計 SVG） ───
+       SVG: 385.61×469.65, master origin (1066.41, 570.57)
+       Cross-verified: 向SENLI in SVG at (0,16.27) → master (1066.41,586.84) ✓
+       left=1066.41/2395.22=44.52%, top=570.57/1260=45.28%, width=385.61/2395.22=16.10% */
+    .dialog-text { z-index: 9; left: 44.52%; top: 45.28%; width: 16.10%; }
 
     /* ─── 回覆框背景（視覺盒子） ───
        SVG: 380.09×488.48, master origin (1540.44, 551.67)
@@ -199,84 +196,22 @@
     #corb-4 { left: 23.25%; top: 72.06%; width: 10.77%; animation: cOrbFloat 9s ease-in-out 4.5s infinite; }
 
     /* ══════════════════════════════════════════════════
-       互動對話框 Overlay
-       對話框.svg: 417.1×488, 使用 padding-bottom trick 計算高度
-       height% of page_height = 17.41% × (488/417.1) / 52.60% = 38.73%
-
-       內部比例（based on master rects）：
-         header  = 53.11/488 = 10.88%
-         input   = 53.11/488 = 10.88%（bottom）
-         messages = 78.24%（middle）
+       互動對話框 —— 只保留輸入列 HTML（視覺內容完全來自 SVG 層）
+       對話框.svg: 417.1×488
+       Input bar starts at y=433.41 within 488-unit dialog SVG:
+         top  = 43.86% + (433.41/488) × 38.73% = 43.86% + 34.41% = 78.27% of page height
+         height = (53.11/488) × 38.73%            = 4.22%  of page height
     ══════════════════════════════════════════════════ */
-    .chat-overlay {
+    .chat-input-only {
       position: absolute;
-      z-index: 9;
-      left: 43.77%; top: 43.86%;
-      width: 17.41%; height: 38.73%;
-      pointer-events: all;
-      display: flex; flex-direction: column;
-      overflow: hidden;
-      border-radius: 2.88%; /* matches SVG rx=12 at 417.1 width */
-    }
-
-    /* Header bar：matches SVG's darker header rect */
-    .chat-header {
-      flex: 0 0 10.88%;
-      display: flex; align-items: center;
-      padding: 0 6%;
-      font-family: 'Source Han Serif VF', 'Source Han Serif TC', '思源宋體', serif;
-      font-size: 0.85vw; color: rgba(245, 242, 228, 0.95);
-      letter-spacing: 0.08em; font-weight: 300;
-      background: rgba(131, 120, 71, 0.70);
-      pointer-events: none;
-    }
-
-    /* Messages scrollable area */
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 4% 5%;
-      display: flex; flex-direction: column; gap: 5%;
-      background: transparent;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(131, 120, 71, 0.28) transparent;
-    }
-    .chat-messages::-webkit-scrollbar { width: 3px; }
-    .chat-messages::-webkit-scrollbar-track { background: transparent; }
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: rgba(131, 120, 71, 0.28); border-radius: 2px;
-    }
-
-    /* SENLI 的訊息（左對齊氣泡） */
-    .msg-incoming {
-      background: rgba(245, 242, 220, 0.88);
-      border: 1px solid rgba(131, 120, 71, 0.18);
-      border-radius: 2% 6% 6% 2%;
-      padding: 5% 7%;
-      font-family: 'Source Han Serif VF', '思源宋體', serif;
-      font-size: 0.65vw; color: #5a5030; line-height: 1.65;
-      align-self: flex-start; max-width: 90%;
-    }
-
-    /* 使用者的訊息（右對齊，顯示在對話框中） */
-    .msg-outgoing-chat {
-      background: rgba(200, 192, 155, 0.60);
-      border: 1px solid rgba(131, 120, 71, 0.22);
-      border-radius: 6% 2% 2% 6%;
-      padding: 5% 7%;
-      font-family: 'Source Han Serif VF', '思源宋體', serif;
-      font-size: 0.65vw; color: #5a5030; line-height: 1.65;
-      align-self: flex-end; max-width: 90%;
-      animation: msgPop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    /* Input bar：matches SVG's bottom input rect */
-    .chat-input-row {
-      flex: 0 0 10.88%;
+      z-index: 10;
+      left: 43.77%; top: 78.27%;
+      width: 17.41%; height: 4.22%;
       display: flex; align-items: center;
       padding: 0 5%; gap: 3%;
       background: transparent;
-      border-top: 1px solid rgba(131, 120, 71, 0.15);
+      pointer-events: all;
+      border-radius: 0 0 2.88% 2.88%;
     }
     #chat-input {
       flex: 1;
@@ -295,10 +230,7 @@
       transition: background 0.2s ease, transform 0.15s ease;
       flex-shrink: 0;
     }
-    #chat-send:hover {
-      background: rgba(131, 120, 71, 0.14);
-      transform: scale(1.14);
-    }
+    #chat-send:hover { background: rgba(131,120,71,0.14); transform: scale(1.14); }
     #chat-send:active { transform: scale(0.90); }
 
     /* ══════════════════════════════════════════════════
@@ -346,6 +278,8 @@
       from { opacity: 0; transform: translateY(6px) scale(0.97); }
       to   { opacity: 1; transform: translateY(0)   scale(1);    }
     }
+    /* 頁面還原的舊訊息：不播動畫 */
+    .msg-no-anim { animation: none; }
   </style>
 </head>
 <body>
@@ -399,24 +333,20 @@
         <img src="svg檔(聯絡我們)/內文.svg" alt="">
       </div>
 
-      <!-- 對話框背景 SVG -->
+      <!-- 對話框背景 SVG（z-index 8） -->
       <div class="lyr dialog-bg">
         <img src="svg檔(聯絡我們)/對話框.svg" alt="">
       </div>
 
-      <!-- 對話框互動 Overlay -->
-      <div class="chat-overlay" id="chat-overlay">
-        <div class="chat-header">向&thinsp;SENLI</div>
-        <div class="chat-messages" id="chat-messages">
-          <div class="msg-incoming">
-            有任何想問我們的問題或是你有意思合作的對象&thinsp;?
-            歡迎以下誠摯的溝通與我們相互聯繫&thinsp;!
-          </div>
-        </div>
-        <div class="chat-input-row">
-          <input type="text" id="chat-input" placeholder="請輸入文字……">
-          <button id="chat-send" title="送出">&#9654;</button>
-        </div>
+      <!-- 對話框的字 SVG（z-index 9）：原設計完整 header＋訊息＋placeholder -->
+      <div class="lyr dialog-text">
+        <img src="svg檔(聯絡我們)/對話框的字.svg" alt="">
+      </div>
+
+      <!-- 對話框輸入列（z-index 10，透明蓋在 SVG 輸入區上） -->
+      <div class="chat-input-only">
+        <input type="text" id="chat-input" placeholder="請輸入文字……">
+        <button id="chat-send" title="送出">&#9654;</button>
       </div>
 
       <!-- 回覆框背景 SVG -->
@@ -441,32 +371,41 @@
   </main>
 
   <script>
-  /* ── 對話框互動功能 ── */
+  /* ── 對話框互動功能 + localStorage 持久化 ── */
   (function () {
-    var chatInput    = document.getElementById('chat-input');
-    var chatSend     = document.getElementById('chat-send');
-    var chatMessages = document.getElementById('chat-messages');
-    var replyMsgs    = document.getElementById('reply-messages');
+    var STORAGE_KEY = 'senli_reply_messages';
+    var chatInput = document.getElementById('chat-input');
+    var chatSend  = document.getElementById('chat-send');
+    var replyMsgs = document.getElementById('reply-messages');
 
+    /* 新增一則訊息到回覆框（不捲動） */
+    function appendReply(text, animate) {
+      var msg = document.createElement('div');
+      msg.className = 'msg-reply' + (animate ? '' : ' msg-no-anim');
+      msg.textContent = text;
+      replyMsgs.appendChild(msg);
+    }
+
+    /* 頁面載入時從 localStorage 還原所有訊息 */
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    saved.forEach(function (text) { appendReply(text, false); });
+    /* 捲到最新 */
+    replyMsgs.scrollTop = replyMsgs.scrollHeight;
+
+    /* 送出 */
     function sendMessage() {
       var text = chatInput.value.trim();
       if (!text) return;
 
-      /* 1. 在右側回覆框累積訊息 */
-      var rMsg = document.createElement('div');
-      rMsg.className = 'msg-reply';
-      rMsg.textContent = text;
-      replyMsgs.appendChild(rMsg);
+      /* 顯示在回覆框（有動畫） */
+      appendReply(text, true);
       replyMsgs.scrollTop = replyMsgs.scrollHeight;
 
-      /* 2. 在對話框也顯示使用者的訊息（右側氣泡） */
-      var cMsg = document.createElement('div');
-      cMsg.className = 'msg-outgoing-chat';
-      cMsg.textContent = text;
-      chatMessages.appendChild(cMsg);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      /* 存入 localStorage */
+      var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      list.push(text);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 
-      /* 3. 清空輸入欄 */
       chatInput.value = '';
       chatInput.focus();
     }
