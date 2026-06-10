@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_2" data-name="圖層 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1541.2 2021.41">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f3eff6;
+        opacity: .5;
+        stroke: #837847;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="_圖層_1-2" data-name="圖層 1">
+    <rect class="cls-1" x="3.48" y="1" width="930.36" height="268.62" rx="12" ry="12"/>
+    <rect class="cls-1" x="4.15" y="327.43" width="930.36" height="511.67" rx="12" ry="12"/>
+    <rect class="cls-1" x="4.15" y="896.92" width="930.36" height="473.05" rx="12" ry="12"/>
+    <rect class="cls-1" x="996.99" y="569.29" width="543.2" height="270.33" rx="12" ry="12"/>
+    <rect class="cls-1" x="998.58" y="896.92" width="539.66" height="473.96" rx="12" ry="12"/>
+    <rect class="cls-1" x="1" y="1428.18" width="1537.89" height="592.23" rx="12" ry="12"/>
+  </g>
+</svg>

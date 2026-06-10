@@ -6,10 +6,12 @@
   <title>產品介紹 — SENLI 森璃</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; min-height: 100vh; background: #dbd7bc; }
+    html { scroll-behavior: smooth; }
+    body { width: 100%; overflow-x: hidden; background: #e4e0c6; }
 
+    /* ── Header ── */
     header {
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
       display: flex; align-items: center; justify-content: space-between;
       padding: 18px 44px;
       background: rgba(245, 242, 228, 0.55);
@@ -39,22 +41,188 @@
     nav a:hover { opacity: 0.65; }
     nav a:hover::after, nav a.active::after { width: 100%; }
 
-    main {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
+    /* ══════════════════════════════════════════════════
+       PAGE CANVAS
+       Master canvas: 2545.8 × 3679.88
+       padding-bottom = 3679.88/2545.8 × 100% = 144.54%
+       All layers use % of this canvas as coordinates.
+    ══════════════════════════════════════════════════ */
+    .page {
+      position: relative;
+      width: 100%;
+      padding-bottom: 144.54%;
+      overflow: hidden;
     }
-    .placeholder {
-      text-align: center;
-      color: #a89b6e;
-      font-family: 'Source Han Serif VF', 'Source Han Serif TC', serif;
-      font-size: 13px; font-weight: 300;
-      letter-spacing: 0.3em;
-      opacity: 0.6;
-      user-select: none;
+
+    /* All layers share absolute positioning; img fills its container width */
+    .lyr {
+      position: absolute;
+      pointer-events: none;
     }
+    .lyr img { display: block; width: 100%; height: auto; }
+
+    /* ─── 背景 (background) ───
+       Expanded to fill full canvas width + 外擴 overflow */
+    .bg { z-index: 1; left: -5%; top: -2%; width: 110%; }
+
+    /* ─── 線條 (flow lines, animated) ───
+       ViewBox: 2545.8 × 3578.68  — same width as canvas
+       外擴: expanded by ~18% each side */
+    .lines {
+      z-index: 2;
+      left: -18%; top: 0%; width: 136%;
+      animation: linesFlow 50s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes linesFlow {
+      0%   { transform: translate(0%,    0%);    }
+      20%  { transform: translate(-1.2%, -0.4%); }
+      40%  { transform: translate(-2.1%,  0.3%); }
+      60%  { transform: translate(-1.6%,  0.7%); }
+      80%  { transform: translate(-0.7%,  0.1%); }
+      100% { transform: translate(0%,    0%);    }
+    }
+
+    /* ─── 光暈 (orb glow) ───
+       ViewBox: 2044×2655
+       外擴: left=0%, width=106% 使光暈充分蓋住左右兩側 */
+    .orb {
+      z-index: 3;
+      left: 0%; top: 0%; width: 106%;
+      animation: orbFloat 10s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes orbFloat {
+      0%   { transform: translateY(0px);   }
+      50%  { transform: translateY(-8px);  }
+      100% { transform: translateY(0px);   }
+    }
+
+    /* ── 光暈互動熱區 ──
+       光暈.svg viewBox: 2044×2655，rendered at left:0%, width:106%
+       換算：水平 1px = 106/2044 = 0.05186% 頁寬；垂直 1px = 95.27/2655 = 0.03589% 頁高
+       各顆光暈內部座標（translate x, y）→ 轉成 .page 的 left/top/width */
+    .orb-hot-wrap {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 3;
+    }
+    .orb-hot {
+      position: absolute;
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
+      pointer-events: all;
+      cursor: default;
+      will-change: transform;
+    }
+    /* hover 時出現的發光暈層 */
+    .orb-hot::after {
+      content: '';
+      position: absolute;
+      inset: -18%;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(232, 224, 175, 0.38) 0%,
+        rgba(196, 215, 148, 0.20) 42%,
+        transparent 68%
+      );
+      mix-blend-mode: screen;
+      opacity: 0;
+      transform: scale(0.82);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+    /* 各顆浮動（無 hover 時） */
+    @keyframes pOrbFloat {
+      0%   { transform: translateY(0px);   }
+      50%  { transform: translateY(-14px); }
+      100% { transform: translateY(0px);   }
+    }
+    /* hover：主體輕微縮放 */
+    @keyframes pOrbFlickerMove {
+      0%   { transform: scale(1.00) translateY(0);    }
+      18%  { transform: scale(1.10) translateY(-4px); }
+      35%  { transform: scale(1.04) translateY(-1px); }
+      52%  { transform: scale(1.09) translateY(-3px); }
+      70%  { transform: scale(1.02) translateY(0);    }
+      85%  { transform: scale(1.07) translateY(-3px); }
+      100% { transform: scale(1.00) translateY(0);    }
+    }
+    /* hover：光暈閃爍 */
+    @keyframes pOrbFlickerGlow {
+      0%   { transform: scale(1.00); opacity: 0.78; }
+      18%  { transform: scale(1.18); opacity: 1.00; }
+      35%  { transform: scale(1.07); opacity: 0.72; }
+      52%  { transform: scale(1.15); opacity: 0.95; }
+      70%  { transform: scale(1.04); opacity: 0.70; }
+      85%  { transform: scale(1.12); opacity: 0.90; }
+      100% { transform: scale(1.00); opacity: 0.78; }
+    }
+    .orb-hot:hover {
+      animation: pOrbFlickerMove 1.6s ease-in-out infinite !important;
+    }
+    .orb-hot:hover::after {
+      opacity: 1;
+      animation: pOrbFlickerGlow 1.6s ease-in-out infinite;
+    }
+    /* 各顆座標與浮動時序 */
+    #porb-1 { left:  0.00%; top:  4.41%; width: 18.93%; animation: pOrbFloat 9s ease-in-out 0.0s infinite; }
+    #porb-2 { left: 12.76%; top: 10.34%; width: 12.14%; animation: pOrbFloat 9s ease-in-out 1.5s infinite; }
+    #porb-3 { left: 74.11%; top:  0.00%; width: 16.02%; animation: pOrbFloat 9s ease-in-out 3.0s infinite; }
+    #porb-4 { left: 22.56%; top: 23.94%; width: 13.33%; animation: pOrbFloat 9s ease-in-out 4.5s infinite; }
+    #porb-5 { left:  6.59%; top: 77.22%; width: 19.86%; animation: pOrbFloat 9s ease-in-out 6.0s infinite; }
+    #porb-6 { left: 92.72%; top: 86.11%; width: 13.28%; animation: pOrbFloat 9s ease-in-out 7.5s infinite; }
+
+    /* ─── 酒瓶 (bottles — both in one SVG) ───
+       ViewBox: 2005×2026
+       左瓶在 SVG x=0，右瓶右緣在 SVG x=2005
+       再各向外擴 5%，確保兩端瓶體完全貼合螢幕左右邊緣 */
+    .bottles { z-index: 4; left: -2%; top: 1%; width: 104%; }
+
+    /* ─── 標語 (hero tagline) ───
+       ViewBox: 747.15×459.47
+       Verified from embedded icon cross-reference (icons at canvas 778,208 / 1016,267 / 1211,209)
+       minus their SVG-internal offsets (-3.6,-10.58 / 234.4,48.42 / 429.4,-9.58)
+       → SVG origin in master canvas: (781.64, 218.58)
+       left  = 781.64 / 2545.8 = 30.70%
+       top   = 218.58 / 3679.88 = 5.94%
+       width = 747.15 / 2545.8 = 29.36%
+       mix-blend-mode: multiply removes white PNG backgrounds */
+    .tagline { z-index: 5; left: 30.70%; top: 5.94%; width: 29.36%; mix-blend-mode: multiply; }
+
+    /* ─── 產品圖 (product image) ───
+       ViewBox: 1171.99×1152.03
+       Exact origin from embedded PNG mapping vs master reference:
+       SVG origin: canvas (1169.77, 710.32)
+       left  = 1169.77 / 2545.8 = 45.95%
+       top   = 710.32  / 3679.88 = 19.30%
+       width = 1171.99 / 2545.8 = 46.04% */
+    .product { z-index: 6; left: 45.95%; top: 19.30%; width: 46.04%; }
+
+    /* ─── 分區的方框 (card backgrounds) ───
+       ViewBox: 1541.2×2021.41
+       Verified from master reference rect cross-match:
+         master rect x=703.92,y=1222.87 matches SVG rect x=3.48,y=1
+         → SVG origin in master = (703.92−3.48, 1222.87−1) = (700.44, 1221.87)
+       left  = 700.44 / 2545.8 = 27.51%
+       top   = 1221.87 / 3679.88 = 33.20%
+       width = 1541.2  / 2545.8 = 60.54% */
+    .cards-bg { z-index: 7; left: 27.51%; top: 33.20%; width: 60.54%; }
+
+    /* ─── 內文 (card text content) ───
+       ViewBox: 1435.13×1922.75
+       Verified from master reference rect cross-match:
+         master rect x=756.73,y=1417.8 matches SVG rect x=1,y=150.09
+         → SVG origin in master = (756.73−1, 1417.8−150.09) = (755.73, 1267.71)
+       left  = 755.73 / 2545.8 = 29.68%
+       top   = 1267.71 / 3679.88 = 34.45%
+       width = 1435.13 / 2545.8 = 56.39% */
+    .cards-text { z-index: 8; left: 29.68%; top: 34.45%; width: 56.39%; }
+
+    /* 照片已嵌入 內文.svg 內部，不需要獨立圖層 */
   </style>
 </head>
 <body>
+
   <header>
     <div class="logo-wrap">
       <img class="logo" src="assets/logo.svg" alt="">
@@ -62,14 +230,68 @@
     </div>
     <nav>
       <a href="index.html">首頁</a>
-      <a href="survey.html">問卷調查</a>
-      <a href="interview.html">教授訪談</a>
       <a href="product.html" class="active">產品介紹</a>
       <a href="contact.html">聯絡我們</a>
     </nav>
   </header>
+
   <main>
-    <div class="placeholder">內容建置中</div>
+    <div class="page">
+
+      <!-- 背景 -->
+      <div class="lyr bg">
+        <img src="svg檔(產品介紹)/背景.svg" alt="">
+      </div>
+
+      <!-- 線條 (animated flow) -->
+      <div class="lyr lines">
+        <img src="svg檔(產品介紹)/線條.svg" alt="">
+      </div>
+
+      <!-- 光暈 (orb glow, gentle float) -->
+      <div class="lyr orb">
+        <img src="svg檔(產品介紹)/光暈.svg" alt="">
+      </div>
+
+      <!-- 光暈互動熱區（透明圓形 div，hover 發光閃爍） -->
+      <div class="orb-hot-wrap">
+        <div class="orb-hot" id="porb-1"></div>
+        <div class="orb-hot" id="porb-2"></div>
+        <div class="orb-hot" id="porb-3"></div>
+        <div class="orb-hot" id="porb-4"></div>
+        <div class="orb-hot" id="porb-5"></div>
+        <div class="orb-hot" id="porb-6"></div>
+      </div>
+
+      <!-- 酒瓶 (both hero + content bottles in one SVG) -->
+      <div class="lyr bottles">
+        <img src="svg檔(產品介紹)/酒瓶.svg" alt="">
+      </div>
+
+      <!-- 標語 (hero tagline) -->
+      <div class="lyr tagline">
+        <img src="svg檔(產品介紹)/標語.svg" alt="森生不息 璃續新生">
+      </div>
+
+      <!-- 產品圖 (product image) -->
+      <div class="lyr product">
+        <img src="svg檔(產品介紹)/產品圖.svg" alt="">
+      </div>
+
+      <!-- 分區的方框 (card section backgrounds) -->
+      <div class="lyr cards-bg">
+        <img src="svg檔(產品介紹)/分區的方框.svg" alt="">
+      </div>
+
+      <!-- 內文 (card text content) -->
+      <div class="lyr cards-text">
+        <img src="svg檔(產品介紹)/內文.svg" alt="">
+      </div>
+
+      <!-- 照片已嵌入 內文.svg 內，不需額外圖層 -->
+
+    </div>
   </main>
+
 </body>
 </html>
