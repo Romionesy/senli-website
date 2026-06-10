@@ -57,6 +57,12 @@
       overflow: hidden;
     }
 
+    /* 內容平移容器：背景以外的元素整組往下移（背景 .bg 為 fixed 不受影響） */
+    .content-shift {
+      position: absolute; inset: 0;
+      transform: translateY(4vw);
+    }
+
     /* Shared layer style */
     .lyr {
       position: absolute;
@@ -376,6 +382,9 @@
         <img src="svg檔(聯絡我們)/背景.svg" alt="">
       </div>
 
+      <!-- 內容平移容器（背景以外的元素整組往下移） -->
+      <div class="content-shift">
+
       <!-- 線條（緩慢流動） -->
       <div class="lyr lines">
         <img src="svg檔(聯絡我們)/線條.svg" alt="">
@@ -440,6 +449,8 @@
         <div class="orb-hot" id="corb-3"></div>
         <div class="orb-hot" id="corb-4"></div>
       </div>
+
+      </div><!-- /.content-shift -->
 
     </div>
   </main>
