@@ -353,6 +353,40 @@
       display: block;
       pointer-events: none;
     }
+
+    /* ══════════════════════════════════════════════════
+       📱 手機版（≤768px）
+       整頁為等比例畫布會自動縮放，重點是讓卡片可點擊提示常駐顯示
+       （手機沒有滑鼠 hover，否則使用者不知道卡片可點放大）
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      header { padding: 12px 18px; }
+      .logo { height: 34px; }
+      .logo-name { font-size: 15px; letter-spacing: 0.10em; }
+      nav { gap: 18px; }
+      nav a { font-size: 13px; }
+
+      /* 卡片熱區：常駐顯示邊框與「點擊放大」提示 */
+      .card-hot {
+        border-color: rgba(131, 120, 71, 0.30);
+        background: rgba(245, 240, 215, 0.08);
+      }
+      .card-hot::after {
+        opacity: 1;
+        font-size: 9px;
+        padding: 1px 5px;
+        bottom: 4px; right: 5px;
+      }
+
+      /* 放大視窗：手機上幾乎滿版，閱讀更清楚 */
+      .card-modal-box {
+        width: 94vw;
+        height: 90vh;
+        border-radius: 14px;
+      }
+      .card-modal-header { padding: 12px 14px 10px; }
+      .card-modal-title { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
